@@ -1,0 +1,24 @@
+/*topbar component */
+.topbar {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  padding: 20px 0 0 40px;
+  padding-right: 200px;
+  color: rgb(55, 53, 4);
+  font-size: 14px;
+  font-weight: 300;
+
+}
+
+.topbar .content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.topbar .notranslate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}

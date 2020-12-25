@@ -1,13 +1,57 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-size: 16pt;
+  line-height: 1.8;
+  color: #292929;
+  font-family: 'Oxygen', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+*,
+*:focus {
+  outline: 0;
+}
+
+/* scroolbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 16px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: rgba(193, 200, 209, 0.4);
+}
+
+
+
+.main {
+  margin-left: 180px;
+  /* Same as the width of the Sidenav */
+  font-size: 18px;
+  /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+
+/* Logo componenet  */
+.logo {}
+
+.logo h3 {
+  padding: 6px 8px 6px 16px;
+  color: #D1FAE0;
 }

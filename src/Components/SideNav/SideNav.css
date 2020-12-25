@@ -1,0 +1,41 @@
+/* SideNav component*/
+.Sidenav {
+  height: 100%;
+  width: 180px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #004F2D;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.Sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #D1FAE0;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 178px;
+  /* font-family: "Syne", sans-serif; */
+}
+
+
+.Sidenav a:hover {
+  color: #f1f1f1;
+}
+
+@media screen and (max-height: 450px) {
+  .Sidenav {
+    padding-top: 15px;
+  }
+
+  .Sidenav a {
+    font-size: 18px;
+  }
+}

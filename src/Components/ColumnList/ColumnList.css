@@ -1,0 +1,8 @@
+/* column list componenet */
+
+.column_list {
+  display: flex;
+  overflow-y: hidden;
+  height: 100vh;
+  padding: 3em 0 1em 2em;
+}
