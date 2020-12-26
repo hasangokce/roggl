@@ -17,7 +17,7 @@ export default class MenuList extends React.Component {
     super(props)
 
     this.state = {
-      active_menu: 2,
+      active_item: { id: 2, name: 'Artificial' },
       menus: [
         { id: 1, name: 'Academic English' },
         { id: 2, name: 'Artificial Intelligence' },
@@ -33,11 +33,12 @@ export default class MenuList extends React.Component {
     }
 
     this.addMenu = this.addMenu.bind(this)
+    this.handleMenuClick = this.handleMenuClick.bind(this)
+    this.removeMenu = this.removeMenu.bind(this);
   }
 
   addMenu() {
     // this.setState({ menus: [...this.state.menus, {id:12, name: 'New collection'}] })
-
     const newState = {
       ...this.state,
       menus: [
@@ -48,20 +49,44 @@ export default class MenuList extends React.Component {
     this.setState(newState);
   }
 
-  handleActive() {
+  deleteMenu() {
+    alert('delete menu called')
+  }
 
+  removeMenu() {
+    // get current menu items
+    let menus = this.state.menus;
+    menus = menus.filter(currentMenu => currentMenu.id !== this.state.active_item.id);
+    this.setState({ menus: menus });
+    // no operation if there is no menu item
+    if (menus[0]) {
+      const firstMenu = menus[0]
+      this.setState({ active_item: firstMenu })
+    }
+  }
+
+  handleMenuClick(e) {
+    const id = parseInt(e.target.hash)
+    const name = e.target.text
+    const newState = {
+      ...this.state,
+      active_item: { id: id, name: name },
+    };
+    this.setState(newState);
   }
 
   render() {
     return (
-      <div className="TrackList">
-        <TopBar active_menu={this.state.menus.find(x => x.id === this.state.active_menu)}></TopBar>
+      <div className="MenuList">
+        <TopBar active_menu={this.state.active_item} ></TopBar>
         {
           this.state.menus.map(menu => {
-            return <Menu menu={menu} key={menu.id} />
+            return <Menu menu={menu} key={menu.id} id={menu.id} handleMenuClick={this.handleMenuClick} />
           })
         }
+        <hr />
         <a href="#addMenu" onClick={this.addMenu}>+ Add new</a>
+        <a href="#removeMenu" onClick={this.removeMenu}>- Delete this</a>
       </div>
     );
   }

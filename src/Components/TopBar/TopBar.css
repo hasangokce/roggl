@@ -22,7 +22,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 160px;
+  max-width: 300px;
 }
 
 .blank {
@@ -40,4 +40,8 @@
   fill: inherit;
   flex-shrink: 0;
   backface-visibility: hidden;
+}
+
+.TopBar input[text] {
+
 }

@@ -5,7 +5,7 @@ export class Menu extends React.Component {
 
   render() {
     return (
-      <div className="Menu">
+      <div className="Menu" onClick={this.props.handleMenuClick}>
         <a href={"#" + this.props.menu.id}>{this.props.menu.name}</a>
       </div>
     );

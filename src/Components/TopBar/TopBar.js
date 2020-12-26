@@ -23,11 +23,19 @@ export default class TopBar extends React.Component {
     }
   }
 
+  handleDoubleClick(e) {
+    console.log('called')
+    e.target.disabled = false;
+    // alert('Double clicked!' + e.target.classList.add('click-state'))
+  }
+
   render() {
     return (
       <div className="TopBar">
         <div className="content">
-          <span className="notranslate">{this.props.active_menu}  Learning Guitar with caution. I say dacce or me dace for me </span>
+          <div>
+            <input className="notranslate" disabled={true} value={this.props.active_menu.name}></input>
+          </div>
           <div className="blank">
             <div onClick="this.handleToggle()" className="notion-topbar-more-button" role="button" tabindex="0">
               <svg
