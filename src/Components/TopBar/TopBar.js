@@ -25,28 +25,25 @@ export default class TopBar extends React.Component {
 
   render() {
     return (
-      <div class="topbar">
-        <div class="content">
-          <span class="notranslate">Learning Guitar with caution. I say dacce or me dace for me</span>
-          <div style={{
-            display: 'flex',
-            flexGrow: 0,
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'stretch'
-          }}>
-
-            <div onClick="this.handleToggle()" class="notion-topbar-more-button" role="button" tabindex="0" style=""><svg
-              viewBox="0 0 13 3" class="dots"
-              style="width: 18px; height: 18px; display: block; fill: inherit; flex-shrink: 0; backface-visibility: hidden;">
-              <g>
-                <path d="M3,1.5A1.5,1.5,0,1,1,1.5,0,1.5,1.5,0,0,1,3,1.5Z"></path>
-                <path d="M8,1.5A1.5,1.5,0,1,1,6.5,0,1.5,1.5,0,0,1,8,1.5Z"></path>
-                <path d="M13,1.5A1.5,1.5,0,1,1,11.5,0,1.5,1.5,0,0,1,13,1.5Z"></path>
-              </g>
-            </svg></div>
+      <div className="TopBar">
+        <div className="content">
+          <span className="notranslate">{this.props.active_menu}  Learning Guitar with caution. I say dacce or me dace for me </span>
+          <div className="blank">
+            <div onClick="this.handleToggle()" className="notion-topbar-more-button" role="button" tabindex="0">
+              <svg
+                viewBox="0 0 13 3" class="dots">
+                <g>
+                  <path d="M3,1.5A1.5,1.5,0,1,1,1.5,0,1.5,1.5,0,0,1,3,1.5Z"></path>
+                  <path d="M8,1.5A1.5,1.5,0,1,1,6.5,0,1.5,1.5,0,0,1,8,1.5Z"></path>
+                  <path d="M13,1.5A1.5,1.5,0,1,1,11.5,0,1.5,1.5,0,0,1,13,1.5Z"></path>
+                </g>
+              </svg>
+            </div>
           </div>
         </div>
-      </  }
+      </div>
+
+    )
+  }
 }
 
