@@ -7,10 +7,10 @@ const ObjectId = require('mongodb').ObjectId;
 
 // Home page route.
 router.get('/', function (req, res) {
-  req.app.db.collection('my_posts').find().toArray(function (err, result) {
+  req.app.db.collection('my_boards').find().toArray(function (err, result) {
     if (err) throw err
     res.send(result)
-})
+  })
 })
 
 // Single board route
@@ -20,18 +20,41 @@ router.get('/', function (req, res) {
 
 router.get('/:id', (req, res) => {
   console.log(req.params.id)
-  const board_id = new ObjectId(req.params.id)
-  req.app.db.collection("my_posts").findOne({"_id": board_id }, function(err, result) {
+  console.log("a")
+  try {
+    var board_id = new ObjectId(req.params.id)
+  } catch (error) {
+    console.log(error.message)
+    return res.send(404)
+  }
+
+  // if(typeof board_id === "undefined") {
+  //   return res.send(404)
+  // }
+
+
+  req.app.db.collection("my_boards").findOne({ "_id": board_id }, function (err, result) {
     // req.app.db.collection("my_posts").findOne({"_id":{$in: [board_id]} }, function(err, result) {
     if (err) throw err;
-    if(result){
+    if (result) {
       res.status(200).send(result)
     } else {
-      res.status(204).send({'message' : "Not found"})
+      res.status(204).send({ 'message': "Not found" })
     }
   });
 })
 
+app.post('/', function (req, res) {
+  res.send('Got a POST request')
+})
+
+app.put('/', function (req, res) {
+  res.send('Got a PUT request at /user')
+})
+
+app.delete('/:id', function (req, res) {
+  res.send('Got a DELETE request at /user')
+})
 
 // About page route.
 router.get('/about', function (req, res) {
