@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Children } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import './MenuList.css';
 import { Menu } from '../Menu/Menu'
@@ -17,24 +17,26 @@ export default class MenuList extends React.Component {
     super(props)
 
     this.state = {
-      active_item: { id: 2, name: 'Artificial' },
+      active_item: { id: "2", name: 'Artificial' },
       menus: [
-        { id: 1, name: 'Academic English' },
-        { id: 2, name: 'Artificial Intelligence' },
-        { id: 3, name: 'Clean code' },
-        { id: 4, name: 'Design patterns' },
-        { id: 5, name: 'Learn Guitar' },
-        { id: 6, name: 'Learn React' },
-        { id: 7, name: 'Learn Regular Expressions' },
-        { id: 8, name: 'Learn JavaScript ın 30 days' },
-        { id: 9, name: 'Software Engineering Topics' },
-        { id: 10, name: 'Speaking English' },
+        { id: "100", name: 'Academic English' },
+        { id: "110", name: 'Artificial Intelligence' },
+        { id: "120", name: 'Clean code' },
+        { id: "130", name: 'Design patterns' },
+        { id: "140", name: 'Learn Guitar' },
+        { id: "150", name: 'Learn React' },
+        { id: "160", name: 'Learn Regular Expressions' },
+        { id: "170", name: 'Learn JavaScript ın 30 days' },
+        { id: "180", name: 'Software Engineering Topics' },
+        { id: "190", name: 'Speaking English' },
       ]
     }
 
     this.addMenu = this.addMenu.bind(this)
     this.handleMenuClick = this.handleMenuClick.bind(this)
     this.removeMenu = this.removeMenu.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    // this.removeTrack = this.removeTrack.bind(this);
   }
 
   addMenu() {
@@ -66,8 +68,12 @@ export default class MenuList extends React.Component {
   }
 
   handleMenuClick(e) {
-    const id = parseInt(e.target.hash)
+    // returns id such as #342 to 342
+    console.log(e.target.hash)
+    let id = e.target.hash.replace('#', '');
+
     const name = e.target.text
+    console.log(name)
     const newState = {
       ...this.state,
       active_item: { id: id, name: name },
@@ -75,13 +81,35 @@ export default class MenuList extends React.Component {
     this.setState(newState);
   }
 
+  handleChange(event) {
+    console.log('handleChange()')
+    const id = this.state.active_item.id
+    console.log(id)
+    const name = event.target.value
+    console.log(name)
+    // Update menu state
+    let menus = this.state.menus
+    // const found = menus.find(element => element.id === id) // returns elements all data
+    const found = menus.findIndex(element => element.id === id)
+    console.log('found: ' + found)
+
+    if (found) {
+      menus[found].name = name
+
+      this.setState({
+        active_item: { id: id, name: name },
+        menus: menus
+      });
+    }
+  }
+
   render() {
     return (
       <div className="MenuList">
-        <TopBar active_menu={this.state.active_item} ></TopBar>
+        <TopBar active_menu={this.state.active_item} onChange={this.handleChange}></TopBar>
         {
           this.state.menus.map(menu => {
-            return <Menu menu={menu} key={menu.id} id={menu.id} handleMenuClick={this.handleMenuClick} />
+            return <Menu menu={menu} key={menu.id} id={menu.id} handleMenuClick={this.handleMenuClick}  />
           })
         }
         <hr />
