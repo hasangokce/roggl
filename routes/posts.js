@@ -44,15 +44,32 @@ router.get('/:id', (req, res) => {
     });
 })
 
-app.post('/', function (req, res) {
-    res.send('Got a POST request')
-})
+// Create single board
+router.post('/', (req, res, next) => {
+    console.log(typeof req.body.name)
+    console.log(typeof req.body.time)
+    const { name, time } = req.body
+    console.log("name: " + name)
+    console.log(time)
+    if (typeof req.body.name !== "string" || typeof req.body.time !== "string") {
+      res.status(404).send()
+    } else {
+      console.log(req.body)
+      req.app.db.collection("my_boards").insertOne({ name, time }, function (err, res) {
+        if (err) throw err;
+        console.log(req.body)
+        console.log("1 document inserted");
+  
+      });
+      res.status(201).send({ 'message': 'success', '_id': req.body._id })
+    }
+  });
 
-app.put('/', function (req, res) {
+router.put('/', function (req, res) {
     res.send('Got a PUT request at /user')
 })
 
-app.delete('/:id', function (req, res) {
+router.delete('/:id', function (req, res) {
     res.send('Got a DELETE request at /user')
 })
 

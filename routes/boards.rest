@@ -1,0 +1,31 @@
+POST http://localhost:4001/boards HTTP/1.1
+content-type: application/json
+
+{
+    "name": "This is my board title"
+}
+###
+POST http://localhost:4001/boards HTTP/1.1
+content-type: application/json
+
+{
+    "name": "abcde",
+    "content": "Lorem Ipsum is Lorem Ipsum isLorem Ipsum isLorem Ipsum isLorem Ipsum isLorem Ipsum isLorem Ipsum isLorem Ipsum isLorem Ipsum isLorem Ipsum isLorem Ipsum is"
+}
+###
+POST http://localhost:4001/boards HTTP/1.1
+content-type: application/json
+
+{
+    "name": 12321,
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
+###
+POST https://jsonplaceholder.typicode.com/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "sample",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
+
