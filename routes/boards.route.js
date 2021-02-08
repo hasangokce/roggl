@@ -5,7 +5,7 @@ const BoardsDAO = require('../dao/boards.dao.js') // DAO
 const BoardsController = require('../controller/boards.controller.js') // controller
 const boardsController = new BoardsController()
 
-/** m
+/**
  * Test
  * @param {number} id
  * @returns {Array}
@@ -45,23 +45,14 @@ router.get('/test', async function (req, res) {
   }
 })
 
-/**
- * Update one
- * @param {number} id
- * @returns {Array}
- */
-router.post('/', boardsController.boardCreatePost)
-router.put('/', boardsController.boardUpdatePut)
-
-// router.post('/', async function (req, res) {
-//   const updateResult = await BoardsDAO.changeSingle()
-//   console.log(updateResult)
-//   res.send()
-// })
+router.post('/', boardsController.boardCreate)
+router.put('/', boardsController.boardUpdate)
+router.delete('/:id', boardsController.boardDelete)
 
 /**
  * Single board route
  * @param {number} id
+ * @throws Will throw an error if there is an error
  * @returns {Array}
  */
 router.get('/:id', (req, res) => {
@@ -87,6 +78,7 @@ router.get('/:id', (req, res) => {
 /**
  * Create the board
  * @param {number} id
+ * @throws Will throw an error if there is an error
  * @returns {Array}
  */
 router.post('/', [check('content').escape()], (req, res, next) => {
@@ -104,24 +96,6 @@ router.post('/', [check('content').escape()], (req, res, next) => {
     })
     res.status(201).send({ message: 'success', _id: req.body._id })
   }
-})
-
-/**
- * Update a board
- * @param {number} id
- * @returns {Object}
- */
-router.put('/', function (req, res) {
-  res.send('Got a PUT request at /user')
-})
-
-/**
- * Delete
- * @param {number} id
- * @returns {Object}
- */
-router.delete('/:id', function (req, res) {
-  res.send('Got a DELETE request at /user')
 })
 
 module.exports = router

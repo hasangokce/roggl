@@ -3,6 +3,12 @@ let boards
 let posts
 
 module.exports = class BoardsDAO {
+  /**
+   * Injects database connections to this class
+   * @param {*} conn Client object from MongoClient
+   * @throws Will throw an error if there is an error
+   * @returns {null}
+   */
   static async injectDB (conn) {
     if (boards && posts) {
       console.log('boardsDAO.js db is already exists')
@@ -15,53 +21,12 @@ module.exports = class BoardsDAO {
     console.log(await posts.findOne({})) // debug
   }
 
-  static async index () {
-    let cursor
-    try {
-      cursor = await boards.find().project({ name: 1 })
-      // // Course Answer
-      // cursor = await movies
-      //   .find({ countries: { $in: countries } })
-      //   .project({ title: 1 })
-    } catch (e) {
-      console.error(`Unable to issue find command, ${e}`)
-      return []
-    }
-
-    return cursor.toArray()
-    // cursor =  boards.find().toArray(function (err, result) {
-    //   if (err) throw err
-    //   return result
-    // })
-    // console.log(cursor)
-    // return cursor
-  }
-
-  static async getOneBoard (userInfo) {
-    return await boards.findOne({ title: 'hasan' })
-  }
-
-  static async boardUpdate (boardObj) {
-    let { _id, name } = boardObj
-    _id = new ObjectId(_id)
-    try {
-      await boards.updateOne(
-        { _id: _id },
-        {
-          $set: {
-            name: name
-            // updated: 2
-          }
-        },
-        { upsert: true }
-      )
-      return { success: true }
-    } catch (e) {
-      console.error(`Error occurred while logging in user, ${e}`)
-      return { error: e }
-    }
-  }
-
+  /**
+   * Creates a single board
+   * @param {*} boardObj
+   * @throws Will throw an error if there is a problem
+   * @returns {Object} Returns response object
+   */
   static async boardCreate (boardObj) {
     const { name } = boardObj
     try {
@@ -70,6 +35,69 @@ module.exports = class BoardsDAO {
     } catch (e) {
       console.error(`Error occurred while logging in user, ${e}`)
       return { error: e }
+    }
+  }
+
+  /**
+   * Reads all items
+   * @throws Will throw an error if there is an error
+   * @returns {Array} Returns an array
+   */
+  static async index () {
+    let cursor
+    try {
+      cursor = await boards.find().project({ name: 1 })
+    } catch (e) {
+      console.error(`Unable to issue find command, ${e}`)
+      return []
+    }
+
+    return cursor.toArray()
+  }
+
+  static async getOneBoard (userInfo) {
+    return await boards.findOne({ title: 'hasan' })
+  }
+
+  /**
+   * Updates board item
+   * @param {Object} boardObj
+   * @throws Will throw an error if the argument is null.
+   * @returns Success message
+   */
+  static async boardUpdate (boardObj) {
+    try {
+      let { _id, name } = boardObj
+      _id = new ObjectId(_id)
+      await boards.updateOne(
+        { _id: _id },
+        {
+          $set: {
+            name: name
+          }
+        },
+        { upsert: true }
+      )
+      return { success: true }
+    } catch (e) {
+      console.error(`Error occurred while logging in user, ${e}`)
+      // return { error: e }
+      return false
+    }
+  }
+
+  static async boardDelete (boardId, userId) {
+    try {
+      // Use the boardId and userEmail to delete the proper comment.
+      const deleteResponse = await boards.deleteOne({
+        _id: ObjectId(boardId)
+      })
+
+      return deleteResponse
+    } catch (e) {
+      console.error(`Unable to delete comment: ${e}`)
+      return false
+      // return false
     }
   }
 }
