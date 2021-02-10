@@ -38,6 +38,17 @@ const Roggl = {
     });
   },
 
+  getColumns (_id) {
+    return fetch(`${redirectUri}/boards/columns/${_id}`).then(response => {
+      return response.json();
+    }).then(jsonResponse => {
+      if (!jsonResponse[0]) {
+        return [];
+      }
+      return jsonResponse
+    });
+  },
+
   update (input) {
     console.log('update')
     console.log(input)

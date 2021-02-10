@@ -2,18 +2,32 @@ import React from 'react';
 import './Column.css';
 
 class Column extends React.Component {
+  handleTitleChange (e) {
+    console.log('handleTitleChange()')
+  }
+  handleContentChange (e) {
+    console.log("inner content change");
+  }
+  componentDidMount () {
+    console.log("Column -> componentDidMount");
+  }
+  shouldComponentUpdate (nextProps, nextState) {
+    return false
+  }
   render() {
     return (
-      <div className="column" suppressContentEditableWarning
-        contentEditable
-        spellCheck={false}>
-        <h2>Sidebar II</h2>
-        <p>This sidebar is of full height (100%) and always shown.</p>
-        <p>Scroll down the page to see the result.</p>
-        <p>Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum definitiones no quo, maluisset
-        concludaturque
-        et eum, altera fabulas ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum. Affert laboramus
-        repudiandae nec et. Inciderint efficiantur his ad. Eum no molestiae voluptatibus.</p>
+      <div className="column">
+        <h2
+          id={this.props.id}
+          onInput={this.handleTitleChange(this.props.column.title)}
+          suppressContentEditableWarning
+          contentEditable
+          spellCheck={false}>{this.props.column.title}</h2>
+        <div
+          id={this.props.id}
+          onInput={ this.props.onHandleContentChange}
+          suppressContentEditableWarning
+          contentEditable spellCheck={false}>{this.props.column.content}</div>
       </div>
     )
   }

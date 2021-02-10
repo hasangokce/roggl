@@ -12,7 +12,14 @@ export default class SideNav extends React.Component {
           <div className="logo" style={{ height: 80 }}>
             <h3>Roggl</h3>
           </div>
-          <MenuList></MenuList>
+        <MenuList
+          menus={this.props.menus}
+          active_item={this.props.active_item}
+          onAddMenu={this.props.onAddMenu}
+          onRemoveMenu={this.props.onRemoveMenu}
+          onHandleMenuClick={this.props.onHandleMenuClick}
+          onHandleChange={this.props.onHandleChange}
+        ></MenuList>
         </div>
   
 
