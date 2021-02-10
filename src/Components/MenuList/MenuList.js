@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import './MenuList.css';
 import { Menu } from '../Menu/Menu'
 import TopBar from '../TopBar/TopBar'
+import Roggl from '../../util/Roggl';
+import ColumnList from '../ColumnList/ColumnList'
 
 /**
  * A React component should use props to store information that can be changed,
@@ -17,18 +19,9 @@ export default class MenuList extends React.Component {
     super(props)
 
     this.state = {
-      active_item: { id: "2", name: 'Artificial' },
+      active_item: { _id: '', name: '...'},
       menus: [
-        { id: "100", name: 'Academic English' },
-        { id: "110", name: 'Artificial Intelligence' },
-        { id: "120", name: 'Clean code' },
-        { id: "130", name: 'Design patterns' },
-        { id: "140", name: 'Learn Guitar' },
-        { id: "150", name: 'Learn React' },
-        { id: "160", name: 'Learn Regular Expressions' },
-        { id: "170", name: 'Learn JavaScript ın 30 days' },
-        { id: "180", name: 'Software Engineering Topics' },
-        { id: "190", name: 'Speaking English' },
+        { _id: 'null', name: 'Loading...' },
       ]
     }
 
@@ -41,100 +34,110 @@ export default class MenuList extends React.Component {
 
   addMenu() {
     // this.setState({ menus: [...this.state.menus, {id:12, name: 'New collection'}] })
-    const newState = {
-      ...this.state,
-      menus: [
-        ...this.state.menus,
-        { id: uuidv4(), name: 'New collection' }
-      ],
-    };
-    this.setState(newState);
+    Roggl.saveBoard({ name: 'New board' }).then(returnedId => {
+      // set state
+      const newState = {
+        ...this.state,
+        menus: [
+          ...this.state.menus,
+          { _id: returnedId, name: 'New board' }
+        ],
+      };
+      this.setState(newState);
+    })
+  }
+
+
+  componentDidMount() {
+    Roggl.getBoards().then(menus => {
+      if (menus.length) {
+        this.setState({menus: menus});
+        this.setState({active_item: menus[0]});
+      }
+    });
+    
   }
 
   deleteMenu() {
     alert('delete menu called')
   }
 
-  removeMenu() {
+  removeMenu () {
+    console.log('remove menu called');
     // get current menu items
     let menus = this.state.menus;
-    menus = menus.filter(currentMenu => currentMenu.id !== this.state.active_item.id);
+    menus = menus.filter(currentMenu => currentMenu._id !== this.state.active_item._id);
     this.setState({ menus: menus });
     // no operation if there is no menu item
     if (menus[0]) {
       const firstMenu = menus[0]
       this.setState({ active_item: firstMenu })
     }
+    // db operation
+    Roggl.delete(this.state.active_item._id)
   }
 
   handleMenuClick(e) {
-    // returns id such as #342 to 342
+    // returns _id such as #342 to 342
     console.log(e.target.hash)
-    let id = e.target.hash.replace('#', '');
+    let _id = e.target.hash.replace('#', '');
 
     const name = e.target.text
     console.log(name)
+    console.log(e.target);
     const newState = {
       ...this.state,
-      active_item: { id: id, name: name },
+      active_item: { _id: _id, name: name },
     };
     this.setState(newState);
+
+    // active menu item stuff
+    this.setState({ active: _id });
   }
 
   handleChange(event) {
-    console.log('handleChange()')
-    const id = this.state.active_item.id
-    console.log(id)
-    const name = event.target.value
+    const _id = this.state.active_item._id
+    let name = event.target.value
     console.log(name)
+    if (name === '') {
+      name = " "
+    }
+    // Fetch update request
+    Roggl.update({ _id, name })
     // Update menu state
     let menus = this.state.menus
-    // const found = menus.find(element => element.id === id) // returns elements all data
-    const found = menus.findIndex(element => element.id === id)
+    // const found = menus.find(element => element.id === _id) // returns elements all data
+    const found = menus.findIndex(element => element._id === _id)
     console.log('found: ' + found)
 
     if (found) {
       menus[found].name = name
 
       this.setState({
-        active_item: { id: id, name: name },
+        active_item: { _id: _id, name: name },
         menus: menus
       });
     }
   }
 
-  render() {
+  render () {
+    const activeStyle = {
+      backgroundColor: 'rgba(25, 25, 25, 0.3)',
+    };
     return (
-      <div className="MenuList">
-        <TopBar active_menu={this.state.active_item} onChange={this.handleChange}></TopBar>
-        {
-          this.state.menus.map(menu => {
-            return <Menu menu={menu} key={menu.id} id={menu.id} handleMenuClick={this.handleMenuClick}  />
-          })
-        }
-        <hr />
-        <a href="#addMenu" onClick={this.addMenu}>+ Add new</a>
-        <a href="#removeMenu" onClick={this.removeMenu}>- Delete this</a>
-      </div>
+        <div className="MenuList">
+          <TopBar active_menu={this.state.active_item} onChange={this.handleChange}></TopBar>
+          {
+            this.state.menus.map(menu => {
+              return <Menu menu={menu} key={menu._id} _id={menu._id} handleMenuClick={this.handleMenuClick} style={this.state.active === menu._id ? activeStyle : {}}  />
+            })
+          }
+          <hr />
+          <a href="#addMenu" onClick={this.addMenu}>+ Add new</a>
+          <a href="#removeMenu" onClick={this.removeMenu}>- Delete this</a>
+        </div>
+
+      
     );
   }
-
-  // render_0() {
-  //   return (
-  //     <div>
-  //       <a href="#ai">Artificial Intelligence</a>
-  //       <a href="#ai">Clean code</a>
-  //       <a href="#ai">Design patterns</a>
-  //       <a href="#ai">English</a>
-  //       <a href="#ai">Learn Guitar</a>
-  //       <a href="#ai">Learn Guitar</a>
-  //       <a href="#ai">Learn React</a>
-  //       <a href="#ai">Learn Regular Expressions</a>
-  //       <a href="#services">Learn JavaScript In 30 days.</a>
-  //       <a href="#clients">Learn Design Patterns</a>
-  //       <a href="#ai">Software Engineering Topics</a>
-  //       <a href="#contact">+ Add new</a>
-  //     </div>
-  //   );
-  // }
 }

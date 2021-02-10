@@ -3,10 +3,10 @@ import './Menu.css';
 
 export class Menu extends React.Component {
 
-  render() {
+  render () {
     return (
-      <div className="Menu" onClick={this.props.handleMenuClick}>
-        <a href={"#" + this.props.menu.id}>{this.props.menu.name}</a>
+      <div className="Menu" onClick={this.props.handleMenuClick} style={this.props.style}>
+        <a href={"#" + this.props.menu._id} placeholder="aa">{this.props.menu.name}</a>
       </div>
     );
   }

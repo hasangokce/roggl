@@ -21,8 +21,8 @@ export default class TopBar extends React.Component {
       <div className="TopBar">
         <div className="content">
           <div>
-            <input className="notranslate" value={this.props.active_menu.name} onChange={this.props.onChange}></input>
-            <span onClick={this.handleToggle}> _lock</span>
+            <input className="notranslate" value={this.props.active_menu.name} onChange={this.props.onChange} placeholder="Untitled"></input>
+            <span onClick={this.handleToggle}> 🔒</span>
           </div>
           <div className="blank">
             <div className="notion-topbar-more-button" role="button" >

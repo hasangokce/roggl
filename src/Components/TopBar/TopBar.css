@@ -42,6 +42,9 @@
   backface-visibility: hidden;
 }
 
-.TopBar input[text] {
-
+.TopBar input {
+  font-size: 18px;
+  font-weight: 700px;
+  border: 0;
+  width: 400px;
 }
