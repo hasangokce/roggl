@@ -11,14 +11,14 @@ export default class App extends React.Component {
     super(props)
 
     this.state = {
-      active_item: { _id: '', name: '...'},
+      active_item: { _id: '', name: '...' },
       menus: [
         { _id: 'null', name: 'Loading...' },
       ],
       columns: [
-        { _id: 'a1', title: 'title 1', content: 'content1' },
-        { _id: 'a2', title: 'title 2', content: 'content2' },
-        { _id: 'a3', title: 'title 3', content: 'content3' },
+        // { _id: 'a1', title: 'title 1', content: 'content1' },
+        // { _id: 'a2', title: 'title 2', content: 'content2' },
+        // { _id: 'a3', title: 'title 3', content: 'content3' },
       ]
     }
 
@@ -29,7 +29,7 @@ export default class App extends React.Component {
     this.handleContentChange = this.handleContentChange.bind(this);
   }
 
-  addMenu() {
+  addMenu () {
     // this.setState({ menus: [...this.state.menus, {id:12, name: 'New collection'}] })
     Roggl.saveBoard({ name: 'New board' }).then(returnedId => {
       // set state
@@ -44,15 +44,13 @@ export default class App extends React.Component {
     })
   }
 
-
-  componentDidMount() {
+  componentDidMount () {
     Roggl.getBoards().then(menus => {
       if (menus.length) {
-        this.setState({menus: menus});
-        this.setState({active_item: menus[0]});
+        this.setState({ menus: menus });
+        this.setState({ active_item: menus[0] });
       }
     });
-    
   }
 
   removeMenu () {
@@ -70,10 +68,11 @@ export default class App extends React.Component {
     Roggl.delete(this.state.active_item._id)
   }
 
-  handleMenuClick(e) {
+  handleMenuClick (e) {
     // returns _id such as #342 to 342
     console.log('handleMenuClick called');
     console.log(e.target.hash)
+    if (!e.target.hash) return
     let _id = e.target.hash.replace('#', '');
 
     const name = e.target.text
@@ -91,14 +90,14 @@ export default class App extends React.Component {
     // get board content from DB
     Roggl.getColumns(_id).then(response => {
       console.log(response);
-      this.setState({columns: response})
+      this.setState({ columns: response })
     })
 
 
   }
 
 
-  handleChange(event) {
+  handleChange (event) {
     const _id = this.state.active_item._id
     let name = event.target.value
     console.log("new name" + name)
@@ -122,11 +121,11 @@ export default class App extends React.Component {
       // Update active item name
       let active_item = this.state.active_item
       active_item.name = name
-      this.setState({active_item: active_item, menus: menus})
+      this.setState({ active_item: active_item, menus: menus })
     }
   }
 
-  handleContentChange(e) {
+  handleContentChange (e) {
     const id = e.target.id
     // console.log('Hello bro!')
     // console.log('Text inside div id', e.target.id)
@@ -138,8 +137,8 @@ export default class App extends React.Component {
     columns[found].content = e.currentTarget.innerHTML //change
 
     this.setState({
-      columns: columns 
-    }) 
+      columns: columns
+    })
 
   }
 
@@ -149,16 +148,16 @@ export default class App extends React.Component {
       <div className="App">
         <div className="main">
           <SideNav
-          onAddMenu={this.addMenu}
-          onRemoveMenu={this.removeMenu}
-          onHandleMenuClick={this.handleMenuClick}
-          onHandleChange={this.handleChange}
-          menus = {this.state.menus}
-          active_item = {this.state.active_item}
+            onAddMenu={this.addMenu}
+            onRemoveMenu={this.removeMenu}
+            onHandleMenuClick={this.handleMenuClick}
+            onHandleChange={this.handleChange}
+            menus={this.state.menus}
+            active_item={this.state.active_item}
           ></SideNav>
           {this.state.columns.length === 0
             ? <ColumnListNone />
-            : <ColumnList columns={this.state.columns} onHandleContentChange={this.handleContentChange}></ColumnList>} 
+            : <ColumnList columns={this.state.columns} onHandleContentChange={this.handleContentChange}></ColumnList>}
         </div>
       </div>
     );

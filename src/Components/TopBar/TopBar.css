@@ -19,10 +19,11 @@
 }
 
 .TopBar .notranslate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   max-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background-color: #efefef;
 }
 
 .blank {
