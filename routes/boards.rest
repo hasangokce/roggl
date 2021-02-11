@@ -66,3 +66,27 @@ content-type: application/json
 DELETE http://localhost:4001/boards/60204a23bbf07269d0fdcb92 HTTP/1.1
 content-type: application/json
 
+
+### 10
+
+POST http://localhost:4001/boards/columns HTTP/1.1
+content-type: application/json
+
+{
+    "owner_id": "6006f8e357638c51a36a59c3",
+    "board_id": "6023d97b45fa21283c937a26",
+    "title": "Beautiful 1",
+    "content": "World"
+}
+
+### 11
+GET http://localhost:4001/boards/columns HTTP/1.1
+
+### 12 Columns Update
+PUT http://localhost:4001/boards/columns HTTP/1.1
+content-type: application/json
+
+{
+    "_id": "60243ebbe28a4355ccdb257a",
+    "content": "New Category5"
+}

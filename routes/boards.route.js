@@ -3,7 +3,9 @@ const router = express.Router()
 const { check } = require('express-validator')
 const BoardsDAO = require('../dao/boards.dao.js') // DAO
 const BoardsController = require('../controller/boards.controller.js') // controller
+const ColumnsController = require('../controller/columns.controller.js') // controller
 const boardsController = new BoardsController()
+const columnsController = new ColumnsController()
 
 /**
  * Test
@@ -25,29 +27,15 @@ router.get('/', async function (req, res) {
   res.send(result)
 })
 
-/**
- * Test
- * @param {number} id
- * @returns {Array}
- */
-router.get('/test', async function (req, res) {
-  const userInfo = {
-    name: 'Hasan',
-    surname: 'Gökçe'
-  }
-  const fetchResult = await BoardsDAO.getOneBoard(userInfo)
-  if (!fetchResult) {
-    console.log('fetchResult.error')
-    res.send({ message: 'not found' })
-  } else {
-    console.log(fetchResult)
-    res.send(fetchResult)
-  }
-})
-
 router.post('/', boardsController.boardCreate)
 router.put('/', boardsController.boardUpdate)
 router.delete('/:id', boardsController.boardDelete)
+// Columns
+router.post('/columns', columnsController.createItem)
+router.get('/columns/:board_id', columnsController.getItems)
+router.put('/columns', columnsController.columnUpdate)
+router.put('/columns/edit/title', columnsController.columnUpdateTitle)
+
 
 /**
  * Single board route

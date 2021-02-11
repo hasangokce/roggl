@@ -15,7 +15,7 @@ module.exports = class BoardsController {
     const { _id, name } = { ...req.body }
     const updateResult = await BoardsDAO.boardCreate({ _id, name })
     console.log(updateResult)
-    res.send({ ok: 1 })
+    res.send({ ok: 1 , insertedId: updateResult.insertedId })
   }
 
   async boardUpdate (req, res) {
@@ -23,7 +23,7 @@ module.exports = class BoardsController {
     console.log(req.body)
     const updateResult = await BoardsDAO.boardUpdate({ _id, name })
     console.log(updateResult)
-    res.send()
+    res.send({ok: 1})
   }
 
   async boardDelete (req, res) {

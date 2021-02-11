@@ -15,13 +15,29 @@ app.use(function (error, req, res, next) {
 })
 
 // DAOs
-const BoardsDAO = require('./dao/boards.dao.js')
+const BoardsDAO = require('./dao/boards.dao.js') 
+const ColumnsDAO = require('./dao/columns.dao.js') 
 
 // CORS
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-type,Accept,X-Access-Token,X-Key');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Credentials", true );
   next()
 })
+
+// function setupCORS(req, res, next) {
+//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//   res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-type,Accept,X-Access-Token,X-Key');
+//   res.header('Access-Control-Allow-Origin', '*');
+//   if (req.method === 'OPTIONS') {
+//       res.status(200).end();
+//   } else {
+//       next();
+//   }
+// }
+// app.all('/*', setupCORS);
 
 /**
  * Static
@@ -44,6 +60,7 @@ MongoClient.connect(
 
     // const boards = new boardsDAO(db)
     BoardsDAO.injectDB(client)
+    ColumnsDAO.injectDB(client)
     // boards.test()
   })
 
