@@ -4,3 +4,7 @@
   background: rgb(159, 159, 159);
   background-image: linear-gradient(to right, rgb(5, 113, 39), rgb(19, 171, 87), rgb(158, 204, 169));
 }
+
+.MenuList .btnSide {
+  padding: 2px 8px;
+}

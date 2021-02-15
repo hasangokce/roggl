@@ -1,11 +1,12 @@
 /*column component */
 .column {
   flex: 10 0 auto;
+  min-width: 300px;
   max-width: 400px;
   overflow-x: auto;
   overflow-y: auto;
   scroll-behavior: smooth;
-  padding: 0.2rem 2rem;
+  padding: 0.2rem 0rem;
   margin-right: 2rem;
   /* border: 1px solid #efefef;
   border-radius: 10px;
@@ -13,14 +14,51 @@
 }
 
 .column {
-  border-radius: 8px;
+  border-radius: 4px;
   background: #ffffff;
-  box-shadow:
-  0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-  0 6.7px 5.3px rgba(0, 0, 0, 0.048),
-  0 12.5px 10px rgba(0, 0, 0, 0.06),
-  0 22.3px 17.9px rgba(0, 0, 0, 0.072),
-  0 41.8px 33.4px rgba(0, 0, 0, 0.086),
-  0 100px 80px rgba(0, 0, 0, 0.12)
-;
+
+}
+.columnHeader {
+  display: flex;
+  overflow: hidden;
+  padding: 10px 0;
+}
+
+.columnHeader .svgImg {
+  height: 16px;
+  fill: orange;
+}
+
+.columnTitle {
+  padding: 0 1rem;
+  width: 94%;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.columnContent {
+  padding: 0 1rem;
+  font-size: 17px;
+  line-height: 1.47059;
+  font-weight: 400;
+  letter-spacing: -.022em;
+  font-family: "Helvetica","Arial",sans-serif;
+  color: #1d1d1f;
+  font-style: normal;
+}
+
+.columnContent img {
+  margin: 20px 0;
+  max-width: 100%;
+}
+
+.headerMore {
+  cursor: pointer;
+  width: 6%;
+  margin-right: -40px;
+}
+
+[contentEditable=true]:empty:before{
+  content:attr(data-ph);
+  color:#E1E1E0;
 }

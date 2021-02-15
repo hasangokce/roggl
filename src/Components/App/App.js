@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { Children } from 'react'
 import './App.css';
 import SideNav from '../SideNav/SideNav'
 import ColumnList from '../ColumnList/ColumnList'
 import ColumnListNone from '../ColumnListNone/ColumnListNone'
+import Session from '../Session/Session'
 import Roggl from '../../util/Roggl';
 
 
@@ -13,13 +14,11 @@ export default class App extends React.Component {
     this.state = {
       active_item: { _id: '', name: '...' },
       menus: [
-        { _id: 'null', name: 'Loading...' },
       ],
       columns: [
-        // { _id: 'a1', title: 'title 1', content: 'content1' },
-        // { _id: 'a2', title: 'title 2', content: 'content2' },
-        // { _id: 'a3', title: 'title 3', content: 'content3' },
-      ]
+      ],
+      isLogin: false,
+      page: 'login'
     }
 
     this.addMenu = this.addMenu.bind(this)
@@ -27,11 +26,18 @@ export default class App extends React.Component {
     this.removeMenu = this.removeMenu.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleContentChange = this.handleContentChange.bind(this);
+    this.handleTitleChange = this.handleTitleChange.bind(this);
+    this.addNewPage = this.addNewPage.bind(this);
+    this.handleDeletePage = this.handleDeletePage.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleRegister = this.handleRegister.bind(this);
+    this.onStudy = this.onStudy.bind(this);
   }
 
   addMenu () {
     // this.setState({ menus: [...this.state.menus, {id:12, name: 'New collection'}] })
-    Roggl.saveBoard({ name: 'New board' }).then(returnedId => {
+    let user = JSON.parse(localStorage.getItem('user'));
+    Roggl.saveBoard({ name: 'New board', owner_id: user.user_id }).then(returnedId => {
       // set state
       const newState = {
         ...this.state,
@@ -45,10 +51,21 @@ export default class App extends React.Component {
   }
 
   componentDidMount () {
-    Roggl.getBoards().then(menus => {
+    console.log('first time componentDidMount');
+    if (localStorage.getItem('user')) {
+      this.getBoards()
+    }
+  }
+
+  getBoards () {
+    const user_id = JSON.parse(localStorage.getItem('user')).user_id;
+    console.log('get boards for user_id: ' + user_id);
+
+    Roggl.getBoards(user_id).then(menus => {
       if (menus.length) {
-        this.setState({ menus: menus });
-        this.setState({ active_item: menus[0] });
+        this.setState({ menus: menus, active_item: menus[0], page: 'home' });
+        // Handle Get Columns
+        this.handleGetColumns(menus[0]._id)
       }
     });
   }
@@ -88,14 +105,19 @@ export default class App extends React.Component {
     this.setState({ active: _id });
 
     // get board content from DB
+    console.log('|->called getColumns');
+    console.log('|--> id: ' + _id);
+
+    // Handle Get Columns
+    this.handleGetColumns(_id)
+  }
+
+  handleGetColumns (_id) {
     Roggl.getColumns(_id).then(response => {
       console.log(response);
       this.setState({ columns: response })
     })
-
-
   }
-
 
   handleChange (event) {
     const _id = this.state.active_item._id
@@ -125,40 +147,185 @@ export default class App extends React.Component {
     }
   }
 
-  handleContentChange (e) {
+  handleTitleChange (e) {
     const id = e.target.id
-    // console.log('Hello bro!')
-    // console.log('Text inside div id', e.target.id)
-    // console.log('Text inside div', e.currentTarget.textContent)
-    // console.log('Text inside div', e.currentTarget.innerHTML)
-
     let columns = this.state.columns // copy
     const found = columns.findIndex(element => element._id === id) //find
-    columns[found].content = e.currentTarget.innerHTML //change
+    if (columns) {
+      columns[found].content = e.currentTarget.textContent //change or .textContent
+    } else {
+      console.log('error has been prevented');
+      return
+    }
+    this.setState({
+      columns: columns
+    })
+    // debug
+    console.log(id, e.currentTarget.textContent);
+    // Send api post request to update column content
+    Roggl.columnUpdateTitle({ _id: id, title: e.currentTarget.textContent })
+  }
+
+  handleContentChange (e) {
+    const id = e.target.id
+    let columns = this.state.columns // copy
+    const found = columns.findIndex(element => element._id === id) //find
+    columns[found].content = e.currentTarget.innerHTML //change or .textContent
 
     this.setState({
       columns: columns
     })
 
+    // debug
+    console.log(id, e.currentTarget.innerHTML);
+
+    // Send api post request to update column content
+    Roggl.columnUpdate({ _id: id, content: e.currentTarget.innerHTML })
+
   }
 
+  addNewPage (e) {
+    // copy columns state
+    let columns = this.state.columns
+
+    // database operations
+    let user = JSON.parse(localStorage.getItem('user'));
+    const owner_id = user.user_id // delete after authorization feature
+    const board_id = this.state.active_item._id
+    let title = ""
+    let content = ""
+    Roggl.addNewPage({ owner_id: owner_id, board_id: board_id, title: title, content: content }).then(returnedId => {
+      columns.push({ _id: returnedId, board_id: board_id, title: '', content: '' })
+      this.setState({
+        columns: columns
+      })
+    })
+
+  }
+
+  handleDeletePage (e) {
+    console.log('|-> delete page')
+    const myKey = e.currentTarget.getAttribute('my-key')
+    // get current menu items
+    let columns = this.state.columns;
+    columns = columns.filter(column => column._id !== myKey);
+    this.setState({ columns: columns });
+    Roggl.pageDelete(myKey)
+  }
+
+  pageSession () {
+    return <Session handleSubmit={this.handleSubmit} handleRegister={this.handleRegister} page={this.state.page} message={this.state.message} />
+  }
+  pageHome () {
+    return (
+      <div className="main">
+        <SideNav
+          onAddMenu={this.addMenu}
+          onRemoveMenu={this.removeMenu}
+          onHandleMenuClick={this.handleMenuClick}
+          onHandleChange={this.handleChange}
+          onStudy={this.onStudy}
+          menus={this.state.menus}
+          active_item={this.state.active_item}
+        ></SideNav>
+        {this.state.columns.length === 0
+          ? <ColumnListNone onAddNewPage={this.addNewPage} />
+          : <ColumnList columns={this.state.columns} onHandleContentChange={this.handleContentChange} onHandleTitleChange={this.handleTitleChange} onAddNewPage={this.addNewPage} onHandleDeletePage={this.handleDeletePage}>></ColumnList>}
+      </div>
+    )
+  }
+
+  handleSubmit (e) {
+    console.log('checkLogin');
+    e.preventDefault()
+    const { email, password } = e.target.elements
+    if (typeof email.value !== 'string' || typeof password.value !== 'string' || email.value === '' || password.value === '') {
+      return false
+    }
+    console.log({ email: email.value, password: password.value })
+
+    if (this.state.page === 'login') {
+      Roggl.lookCredentials({ email: email.value, password: password.value }).then(response => {
+        console.log(response);
+        if (response.ok === 0) {
+          console.log('Geçersiz giriş bilgisi');
+          this.setState({ message: 'Incorrect e-mail address or password.' });
+        } else {
+          // change local storage and state
+          localStorage.setItem('user', JSON.stringify({ 'isLogin': true, 'user_id': response }));
+          this.setState({ page: 'home' });
+
+          // Load boards and pages
+          this.getBoards()
+        }
+      })
+    }
+
+    if (this.state.page === 'register') {
+      console.log('lets register');
+      Roggl.userRegister({ email: email.value, password: password.value }).then(response => {
+        console.log(response);
+        if (response.ok === 0) {
+          console.log('This e-mail address is not available.');
+          this.setState({ message: 'This e-mail address is not available.' });
+        } else {
+          // change local storage and state
+          console.log('response user_id' + response);
+          localStorage.setItem('user', JSON.stringify({ 'isLogin': true, 'user_id': response }));
+          this.setState({ page: 'home' });
+
+          // Create first page
+          this.addMenu()
+
+        }
+      })
+    }
+
+  }
+
+  handleRegister () {
+    console.log('handle register');
+    let page = this.state.page
+    if (page === 'login') {
+      this.setState({ page: 'register', message: '' });
+    } else {
+      this.setState({ page: 'login', message: '' });
+    }
+  }
+
+  onStudy () {
+    console.log('on study state');
+    this.setState({ page: 'study' })
+  }
+
+  pageStudy () {
+    console.log('page study');
+
+    return <h1>Hello</h1>
+  }
 
   render () {
+    console.log('router called');
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      var isLogin = user.isLogin
+    } else {
+      var isLogin = false
+    }
+
+    let component
+    let page = this.state.page
+    if (page === 'home') {
+      component = this.pageHome()
+    } else if (page === 'study') {
+      component = this.pageStudy()
+    } else {
+      component = this.pageSession()
+    }
+
     return (
       <div className="App">
-        <div className="main">
-          <SideNav
-            onAddMenu={this.addMenu}
-            onRemoveMenu={this.removeMenu}
-            onHandleMenuClick={this.handleMenuClick}
-            onHandleChange={this.handleChange}
-            menus={this.state.menus}
-            active_item={this.state.active_item}
-          ></SideNav>
-          {this.state.columns.length === 0
-            ? <ColumnListNone />
-            : <ColumnList columns={this.state.columns} onHandleContentChange={this.handleContentChange}></ColumnList>}
-        </div>
+        {component}
       </div>
     );
   }

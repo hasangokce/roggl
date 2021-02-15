@@ -18,6 +18,7 @@ export default class SideNav extends React.Component {
           onRemoveMenu={this.props.onRemoveMenu}
           onHandleMenuClick={this.props.onHandleMenuClick}
           onHandleChange={this.props.onHandleChange}
+          onStudy={this.props.onStudy}
         ></MenuList>
         </div>
   

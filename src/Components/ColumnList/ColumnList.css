@@ -1,9 +1,31 @@
 /* column list componenet */
 
 .column_list {
-  background-color: #efefef;
+  background-color: #F7F6F3;
   display: flex;
   overflow-y: hidden;
   height: 100vh;
-  padding: 3em 0 1em 2em;
+  padding: 5em 0 1em 2em;
+}
+
+.btnAddPage {
+  position: relative;
+  display: block;
+  height: 36px;
+  padding: 6px 42px;
+  cursor: pointer;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  border-width: 0;
+  outline: none;
+  border-radius: 2px;
+  color: #777777;
+  background-color: #FFFFFF;
+  font-size: 14px;
+  transition: opacity .3s;
+  opacity: 0.7
+}
+
+.btnAddPage:hover, .btnAddPage:focus {
+  opacity: 1
 }

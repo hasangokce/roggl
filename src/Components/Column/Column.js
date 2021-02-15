@@ -1,9 +1,12 @@
 import React from 'react';
 import './Column.css';
+import more from '../../more.svg';
 
 class Column extends React.Component {
-  handleTitleChange (e) {
-    console.log('handleTitleChange()')
+  handleRemove (e) {
+    console.log(e)
+    console.log(e.currentTarget.getAttribute('my-key') );
+    console.log('remove()')
   }
   handleContentChange (e) {
     console.log("inner content change");
@@ -14,23 +17,31 @@ class Column extends React.Component {
   shouldComponentUpdate (nextProps, nextState) {
     return false
   }
-  render() {
+  render () {
     return (
       <div className="column">
-        <h2
+        <div className="columnHeader">
+            <div className="columnTitle"
+              id={this.props.id}
+              onInput={this.props.onHandleTitleChange}
+              suppressContentEditableWarning
+              contentEditable
+              data-ph="Untitled"
+              spellCheck={false}>{this.props.column.title}</div>
+          <div className="headerMore" my-key={this.props.id} onClick={this.props.onHandleDeletePage}><img src={more} className="svgImg" alt="more button"></img></div>
+        </div>
+        <div className="columnContent"
           id={this.props.id}
-          onInput={this.handleTitleChange(this.props.column.title)}
+          onInput={this.props.onHandleContentChange}
           suppressContentEditableWarning
           contentEditable
-          spellCheck={false}>{this.props.column.title}</h2>
-        <div
-          id={this.props.id}
-          onInput={ this.props.onHandleContentChange}
-          suppressContentEditableWarning
-          contentEditable spellCheck={false}>{this.props.column.content}</div>
+          spellCheck={false}
+          data-ph="Type something"
+          dangerouslySetInnerHTML={{ __html: this.props.column.content }}
+        ></div>
       </div>
     )
   }
 }
-
 export default Column;
+// {this.props.column.content}
