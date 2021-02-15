@@ -28,9 +28,10 @@ module.exports = class BoardsDAO {
    * @returns {Object} Returns response object
    */
   static async boardCreate (boardObj) {
-    const { name } = boardObj
+    let { name, owner_id } = boardObj
+    owner_id = ObjectId(owner_id)
     try {
-      const insertResult = await boards.insertOne({ name })
+      const insertResult = await boards.insertOne({ name, owner_id })
       return insertResult
     } catch (e) {
       console.error(`Error occurred while logging in user, ${e}`)
@@ -43,10 +44,12 @@ module.exports = class BoardsDAO {
    * @throws Will throw an error if there is an error
    * @returns {Array} Returns an array
    */
-  static async index () {
+  static async index (user_id) {
+    console.log(user_id);
     let cursor
+    const owner_id = ObjectId(user_id)
     try {
-      cursor = await boards.find().project({ name: 1 })
+      cursor = await boards.find({owner_id: owner_id}).project({ name: 1 })
     } catch (e) {
       console.error(`Unable to issue find command, ${e}`)
       return []

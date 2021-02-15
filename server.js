@@ -5,6 +5,7 @@ const port = process.env.PORT || 4001
 // Require for Routing
 const home = require('./routes/home.js')
 const boards = require('./routes/boards.route.js')
+const users = require('./routes/users.route.js')
 const posts = require('./routes/posts.js')
 
 // Express Parser
@@ -17,6 +18,7 @@ app.use(function (error, req, res, next) {
 // DAOs
 const BoardsDAO = require('./dao/boards.dao.js') 
 const ColumnsDAO = require('./dao/columns.dao.js') 
+const UsersDAO = require('./dao/users.dao.js') 
 
 // CORS
 app.use((req, res, next) => {
@@ -61,6 +63,7 @@ MongoClient.connect(
     // const boards = new boardsDAO(db)
     BoardsDAO.injectDB(client)
     ColumnsDAO.injectDB(client)
+    UsersDAO.injectDB(client)
     // boards.test()
   })
 
@@ -70,6 +73,7 @@ MongoClient.connect(
 app.use('/', home)
 app.use('/boards', boards)
 app.use('/posts', posts)
+app.use('/users', users)
 
 app.listen(port, () => {
   console.log(`This app listening at http://localhost:${port}`)

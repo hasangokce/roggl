@@ -1,7 +1,8 @@
 const ObjectId = require('mongodb').ObjectId
-let columns
+let users
+let boards
 
-module.exports = class ColumnsDAO {
+module.exports = class UsersDAO {
   /**
    * Injects database connections to this class
    * @param {*} conn Client object from MongoClient
@@ -9,15 +10,41 @@ module.exports = class ColumnsDAO {
    * @returns {null}
    */
   static async injectDB (conn) {
-    if (columns) {
+    if (users) {
       console.log('boardsDAO.js db is already exists')
       return
     }
     console.log('boardsDAO.js injection successfull for boardsDAO')
-    columns = await conn.db('roggl').collection('my_columns')
-    console.log(await columns.findOne({})) // debug
+    users = await conn.db('roggl').collection('my_users')
+    boards = await conn.db('roggl').collection('my_boards')
+    console.log(await users.findOne({})) // debug
   }
 
+  static async lookCredentials (userObj) {
+    console.log("dao look credentials");
+    const result = await users.findOne({ email: userObj.email, password: userObj.password })
+    if (result) {
+      return result
+    } else {
+      return { "ok": 0 }
+    }
+  }
+
+  static async userRegister (userObj) {
+    console.log("dao user register");
+    const emailExists = await users.findOne({ email: userObj.email })
+    console.log(emailExists);
+    if (emailExists === null || userObj.password !== '') {
+      console.log('email available do register');
+      const result = await users.insertOne(userObj)
+      console.log({ ok: 1, insertedId: result.insertedId });
+      return { ok: 1, insertedId: result.insertedId }
+
+    } else {
+      console.log('ok: 0 email exists');
+      return { "ok": 0, "message": "Email already exists" }
+    }
+  }
   /**
    * Creates a single board
    * @param {*} columnObj
@@ -28,7 +55,7 @@ module.exports = class ColumnsDAO {
     let { owner_id, board_id, title, content } = columnObj
     owner_id = ObjectId(owner_id)
     try {
-      const insertResult = await columns.insertOne({ owner_id, board_id, title, content })
+      const insertResult = await users.insertOne({ owner_id, board_id, title, content })
       return insertResult
     } catch (e) {
       console.error(`Error occurred while logging in user, ${e}`)
@@ -44,10 +71,9 @@ module.exports = class ColumnsDAO {
   static async index (board_id) {
     let cursor
     console.log("board_id: " + board_id);
-    // const owner_id = ObjectId(owner_id)
+    const owner_id = ObjectId("6006f8e357638c51a36a59c3")
     try {
-      // cursor = await columns.find({owner_id: owner_id, board_id: board_id})//.project({ name: 1 })
-      cursor = await columns.find({board_id: board_id})//.project({ name: 1 })
+      cursor = await users.find({ owner_id: owner_id, board_id: board_id })//.project({ name: 1 })
     } catch (e) {
       console.error(`Unable to issue find command, ${e}`)
       return []
@@ -56,17 +82,17 @@ module.exports = class ColumnsDAO {
     return cursor.toArray()
   }
 
-   /**
-   * Updates column item
-   * @param {Object} columnObj
-   * @throws Will throw an error if the argument is null.
-   * @returns Success message
-   */
+  /**
+  * Updates column item
+  * @param {Object} columnObj
+  * @throws Will throw an error if the argument is null.
+  * @returns Success message
+  */
   static async columnUpdate (columnObj) {
     try {
       let { _id, content } = columnObj
       _id = new ObjectId(_id)
-      await columns.updateOne(
+      await users.updateOne(
         { _id: _id },
         {
           $set: {
@@ -83,18 +109,18 @@ module.exports = class ColumnsDAO {
     }
   }
 
-  
-   /**
-   * Updates column item
-   * @param {Object} columnObj
-   * @throws Will throw an error if the argument is null.
-   * @returns Success message
-   */
+
+  /**
+  * Updates column item
+  * @param {Object} columnObj
+  * @throws Will throw an error if the argument is null.
+  * @returns Success message
+  */
   static async columnUpdateTitle (columnObj) {
     try {
       let { _id, title } = columnObj
       _id = new ObjectId(_id)
-      await columns.updateOne(
+      await users.updateOne(
         { _id: _id },
         {
           $set: {
@@ -114,7 +140,7 @@ module.exports = class ColumnsDAO {
   static async columnDelete (columnId, userId) {
     try {
       // Use the columnId and userEmail to delete the proper comment.
-      const deleteResponse = await columns.deleteOne({
+      const deleteResponse = await users.deleteOne({
         _id: ObjectId(columnId)
       })
 
@@ -126,5 +152,5 @@ module.exports = class ColumnsDAO {
     }
   }
 
-  
+
 }

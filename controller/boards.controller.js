@@ -11,9 +11,15 @@ module.exports = class BoardsController {
     res.send(userInfo)
   }
 
+  async boardAll (req, res) {
+    const result = await BoardsDAO.index(req.params.board_id)
+    res.send(result)
+  }
+
+
   async boardCreate (req, res) {
-    const { _id, name } = { ...req.body }
-    const updateResult = await BoardsDAO.boardCreate({ _id, name })
+    const { owner_id, name } = { ...req.body }
+    const updateResult = await BoardsDAO.boardCreate({ owner_id, name })
     console.log(updateResult)
     res.send({ ok: 1 , insertedId: updateResult.insertedId })
   }

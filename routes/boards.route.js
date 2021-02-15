@@ -18,15 +18,8 @@ const columnsController = new ColumnsController()
 router.get('/about', boardsController.foo)
 // router.route("/about").get(boardsController.foo)
 
-/**
- * Given an article returns only targets
- * @returns {Array}
- */
-router.get('/', async function (req, res) {
-  const result = await BoardsDAO.index()
-  res.send(result)
-})
 
+router.get('/:board_id', boardsController.boardAll)
 router.post('/', boardsController.boardCreate)
 router.put('/', boardsController.boardUpdate)
 router.delete('/:id', boardsController.boardDelete)
@@ -35,6 +28,7 @@ router.post('/columns', columnsController.createItem)
 router.get('/columns/:board_id', columnsController.getItems)
 router.put('/columns', columnsController.columnUpdate)
 router.put('/columns/edit/title', columnsController.columnUpdateTitle)
+router.delete('/columns/:id', columnsController.columnDelete)
 
 
 /**
