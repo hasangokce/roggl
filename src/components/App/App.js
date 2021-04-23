@@ -4,7 +4,7 @@ import SideNav from '../SideNav/SideNav'
 import ColumnList from '../ColumnList/ColumnList'
 import ColumnListNone from '../ColumnListNone/ColumnListNone'
 import Session from '../Session/Session'
-import Roggl from '../../util/Roggl';
+import Roggl from '../../utils/Roggl';
 
 
 export default class App extends React.Component {
