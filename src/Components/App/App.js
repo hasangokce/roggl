@@ -1,4 +1,4 @@
-import React, { Children } from 'react'
+import React from 'react'
 import './App.css';
 import SideNav from '../SideNav/SideNav'
 import ColumnList from '../ColumnList/ColumnList'
@@ -307,10 +307,11 @@ export default class App extends React.Component {
   render () {
     console.log('router called');
     let user = JSON.parse(localStorage.getItem('user'));
+    let isLogin
     if (user) {
-      var isLogin = user.isLogin
+      isLogin = user.isLogin
     } else {
-      var isLogin = false
+      isLogin = false
     }
 
     let component
