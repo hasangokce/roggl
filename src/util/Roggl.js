@@ -1,4 +1,4 @@
-const redirectUri = 'http://localhost:4001'
+const redirectUri = 'https://rog-service.herokuapp.com'
 
 const Roggl = {
   async saveBoard (input) {
