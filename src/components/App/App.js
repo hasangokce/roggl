@@ -230,7 +230,7 @@ export default class App extends React.Component {
         ></SideNav>
         {this.state.columns.length === 0
           ? <ColumnListNone onAddNewPage={this.addNewPage} />
-          : <ColumnList columns={this.state.columns} onHandleContentChange={this.handleContentChange} onHandleTitleChange={this.handleTitleChange} onAddNewPage={this.addNewPage} onHandleDeletePage={this.handleDeletePage}>></ColumnList>}
+          : <ColumnList columns={this.state.columns} onHandleContentChange={this.handleContentChange} onHandleTitleChange={this.handleTitleChange} onAddNewPage={this.addNewPage} onHandleDeletePage={this.handleDeletePage}></ColumnList>}
       </div>
     )
   }
