@@ -1,16 +1,39 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import './ColumnList.css';
-import Column from '../Column/Column'
+import { ColumnContainer } from '../../containers/ColumnContainer'
 
-export default class App extends React.Component {
-  render() {
+export class ColumnList extends React.Component {
+  render () {
+    const colons = this.props.colons
+    const onHandleContentChange = this.props.onHandleContentChange
+    const onHandleTitleChange = this.props.onHandleTitleChange
+    const onHandleDeletePage = this.props.onHandleDeletePage
+    const onAddNewPage = this.props.onAddNewPage
+
     return (
       <div className="column_list">
-        {this.props.columns.map(column => {
-         return <Column column={column} key={column._id} id={column._id} onHandleContentChange={this.props.onHandleContentChange} onHandleTitleChange={this.props.onHandleTitleChange} onHandleDeletePage={this.props.onHandleDeletePage}></Column>
-       })} 
-        <div className="btnAddPage" onClick={this.props.onAddNewPage}> + Add another page</div>
+        {colons.map(column => {
+          return (
+            <ColumnContainer
+              column={column}
+              key={column._id}
+              id={column._id}
+              onHandleContentChange={onHandleContentChange}
+              onHandleTitleChange={onHandleTitleChange}
+              onHandleDeletePage={onHandleDeletePage} />
+          )
+        })}
+        <div className="btnAddPage" onClick={onAddNewPage}> + Add another page</div>
       </div>
     );
   }
+}
+
+ColumnList.propTypes = {
+  colons: PropTypes.array.isRequired,
+  onHandleContentChange: PropTypes.func.isRequired,
+  onHandleTitleChange: PropTypes.func.isRequired,
+  onHandleDeletePage: PropTypes.func.isRequired,
+  onAddNewPage: PropTypes.func.isRequired,
 }

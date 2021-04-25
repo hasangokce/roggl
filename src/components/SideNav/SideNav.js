@@ -1,28 +1,39 @@
 import React from 'react'
+import propTypes from 'prop-types'
 import './SideNav.css';
-import MenuList from '../MenuList/MenuList'
+import { MenuListContainer } from '../../containers/MenuListContainer'
 // import { ReactComponent as Logo } from '../../logo.svg';
 // import logo from '../../logo.svg';
 
-export default class SideNav extends React.Component {
+export class SideNav extends React.Component {
   render () {
-    return (
-        <div className="Sidenav">
-          <div className="logo" style={{ height: 80 }}>
-            <h3>Roggl</h3>
-          </div>
-        <MenuList
-          menus={this.props.menus}
-          active_item={this.props.active_item}
-          onAddMenu={this.props.onAddMenu}
-          onRemoveMenu={this.props.onRemoveMenu}
-          onHandleMenuClick={this.props.onHandleMenuClick}
-          onHandleChange={this.props.onHandleChange}
-          onStudy={this.props.onStudy}
-        ></MenuList>
-        </div>
-  
+    const { menus, active_item, onAddMenu, onRemoveMenu, onHandleMenuClick, onHandleChange, onStudy } = this.props
 
+    return (
+      <div className="Sidenav">
+        <div className="logo" style={{ height: 80 }}>
+          <h3>Roggl</h3>
+        </div>
+        <MenuListContainer
+          menus={menus}
+          active_item={active_item}
+          onAddMenu={onAddMenu}
+          onRemoveMenu={onRemoveMenu}
+          onHandleMenuClick={onHandleMenuClick}
+          onHandleChange={onHandleChange}
+          onStudy={onStudy}
+        />
+      </div>
     );
   }
+}
+
+SideNav.propTypes = {
+  menus: propTypes.array.isRequired,
+  active_item: propTypes.object.isRequired,
+  onAddMenu: propTypes.func.isRequired,
+  onRemoveMenu: propTypes.func.isRequired,
+  onHandleMenuClick: propTypes.func.isRequired,
+  onHandleChange: propTypes.func.isRequired,
+  onStudy: propTypes.func.isRequired,
 }

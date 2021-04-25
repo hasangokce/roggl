@@ -1,35 +1,48 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import './MenuList.css';
 import { Menu } from '../Menu/Menu'
-import TopBar from '../TopBar/TopBar'
+import { TopBarContainer } from '../../containers/TopBarContainer'
 
-/**
- * A React component should use props to store information that can be changed,
- * but can only be changed by a different component.
- * A React component should use state to store information that the component
- * itself can change.
- */
-
-export default class MenuList extends React.Component {
+export class MenuList extends React.Component {
 
   render () {
-    const activeStyle = {
-      backgroundColor: 'rgba(25, 25, 25, 0.3)',
-    };
+    const { menus, active_item, onHandleChange, onHandleMenuClick, onAddMenu, onRemoveMenu, onStudy, activeStyle } = this.props
 
     return (
-        <div className="MenuList">
-          <TopBar active_item={this.props.active_item} onHandleChange={this.props.onHandleChange}></TopBar>
-          {
-          this.props.menus.map(menu => {
-              return <Menu menu={menu} key={menu._id} _id={menu._id} onHandleMenuClick={this.props.onHandleMenuClick} style={this.props.active_item._id === menu._id ? activeStyle : {}}  />
-            })
-          }
-          <hr />
-          <a href="#addMenu" onClick={this.props.onAddMenu}><div className="btnSide">Add</div></a>
-          <a href="#removeMenu" onClick={this.props.onRemoveMenu}><div className="btnSide">Delete</div></a>
-          <a href="#onStudy" onClick={this.props.onStudy}><div className="btnSide">Study</div></a>
-        </div>
+      <div className="MenuList">
+        <TopBarContainer
+          active_item={active_item}
+          onHandleChange={onHandleChange}
+        />
+        {
+          menus.map(menu => {
+            return (
+              <Menu
+                _id={menu._id}
+                key={menu._id}
+                menu={menu}
+                onHandleMenuClick={onHandleMenuClick}
+                style={active_item._id === menu._id ? activeStyle : {}}
+              />
+            )
+          })
+        }
+        <hr />
+        <a href="#addMenu" onClick={onAddMenu}><div className="btnSide">Add</div></a>
+        <a href="#removeMenu" onClick={onRemoveMenu}><div className="btnSide">Delete</div></a>
+        <a href="#onStudy" onClick={onStudy}><div className="btnSide">Study</div></a>
+      </div>
     );
   }
+}
+
+MenuList.propTypes = {
+  active_item: PropTypes.object.isRequired,
+  onHandleChange: PropTypes.func.isRequired,
+  onHandleMenuClick: PropTypes.func.isRequired,
+  onAddMenu: PropTypes.func.isRequired,
+  onRemoveMenu: PropTypes.func.isRequired,
+  onStudy: PropTypes.func.isRequired,
+  activeStyle: PropTypes.object.isRequired
 }

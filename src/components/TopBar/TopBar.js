@@ -1,28 +1,21 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import './TopBar.css';
 
-export default class TopBar extends React.Component {
+export class TopBar extends React.Component {
+  render () {
+    const name = this.props.name
+    const onHandleChange = this.props.onHandleChange
 
-  handleToggle() {
-    var editable_elements = document.querySelectorAll("[contenteditable=true]");
-    for (var i = 0; i < editable_elements.length; i++)
-      editable_elements[i].setAttribute("contenteditable", false);
-    alert("Content editable locked!")
-  }
-
-  handleDoubleClick(e) {
-    console.log('called')
-    e.target.disabled = false;
-    // alert('Double clicked!' + e.target.classList.add('click-state'))
-  }
-
-  render() {
     return (
       <div className="TopBar">
         <div className="content">
           <div>
-            <input className="notranslate" value={this.props.active_item.name} onChange={this.props.onHandleChange} placeholder="Untitled"></input>
-            {/* <span onClick={this.handleToggle}> 🔒</span> */}
+            <input
+              className="notranslate"
+              value={name}
+              onChange={onHandleChange}
+              placeholder="Untitled"></input>
           </div>
           <div className="blank">
             <div className="notion-topbar-more-button" role="button" >
@@ -42,3 +35,7 @@ export default class TopBar extends React.Component {
   }
 }
 
+TopBar.propTypes = {
+  name: PropTypes.string.isRequired,
+  onHandleChange: PropTypes.func.isRequired
+}

@@ -1,47 +1,65 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import './Column.css';
-import more from '../../more.svg';
+import more from '../../assets/more.svg';
 
-class Column extends React.Component {
-  handleRemove (e) {
-    console.log(e)
-    console.log(e.currentTarget.getAttribute('my-key') );
-    console.log('remove()')
-  }
-  handleContentChange (e) {
-    console.log("inner content change");
-  }
-  componentDidMount () {
-    console.log("Column -> componentDidMount");
-  }
-  shouldComponentUpdate (nextProps, nextState) {
+export class Column extends React.Component {
+
+  shouldComponentUpdate () {
     return false
   }
+
   render () {
+    // const {
+    //   id,
+    //   column: { title, content},
+    //   onHandleTitleChange,
+    //   onHandleContentChange,
+    //   onHandleDeletePage
+    // } = this.props
+
+    const {
+      id,
+      title,
+      content,
+      onHandleTitleChange,
+      onHandleContentChange,
+      onHandleDeletePage
+    } = this.props
+
     return (
       <div className="column">
         <div className="columnHeader">
-            <div className="columnTitle"
-              id={this.props.id}
-              onInput={this.props.onHandleTitleChange}
-              suppressContentEditableWarning
-              contentEditable
-              data-ph="Untitled"
-              spellCheck={false}>{this.props.column.title}</div>
-          <div className="headerMore" my-key={this.props.id} onClick={this.props.onHandleDeletePage}><img src={more} className="svgImg" alt="more button"></img></div>
+          <div className="columnTitle"
+            id={id}
+            onInput={onHandleTitleChange}
+            suppressContentEditableWarning
+            contentEditable
+            data-ph="Untitled"
+            spellCheck={false}>{title}</div>
+          <div className="headerMore" my-key={id} onClick={onHandleDeletePage}>
+            <img src={more} className="svgImg" alt="more button" />
+          </div>
         </div>
         <div className="columnContent"
-          id={this.props.id}
-          onInput={this.props.onHandleContentChange}
+          id={id}
+          onInput={onHandleContentChange}
           suppressContentEditableWarning
           contentEditable
           spellCheck={false}
           data-ph="Type something"
-          dangerouslySetInnerHTML={{ __html: this.props.column.content }}
+          dangerouslySetInnerHTML={{ __html: content }}
         ></div>
       </div>
     )
   }
 }
-export default Column;
-// {this.props.column.content}
+
+Column.propTypes = {
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+  onHandleTitleChange: PropTypes.func.isRequired,
+  onHandleContentChange: PropTypes.func.isRequired,
+  onHandleDeletePage: PropTypes.func.isRequired
+}
